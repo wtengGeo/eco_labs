@@ -1,5 +1,5 @@
 ---
-title: "Wenxiu's Project Homepage"
+title: "Final Project: R Reference Guide"
 output: html_document
 ---
 
@@ -7,4 +7,175 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Welcome to Wenxiu's class page!
+
+# R Reference Guide {.tabset .tabset-pills}
+
+
+
+## Loading Data and Packages
+```{r}
+## load palmerpenguins packages
+require(palmerpenguins)
+
+## load Ginkgo data 2021
+require(here)
+ginkgo = read.csv(here("data", "ginkgo_data_2021.csv"))
+head(ginkgo)
+```
+
+
+
+## Data Structures
+
+```{r}
+
+## Create a vector of numbers:
+num_vec  = c(1, 4, 8, 9, 13)
+
+## Create a vector of characters:
+char_vec = c("a", "fish", "data is cool")
+
+## Typing the name of the vector into the console prints the contents
+num_vec
+
+## The print() function accomplishes the same task:
+print(char_vec)
+
+## get the length of vectors
+x = c(1, 4, 8, 9, 13)
+length(x) 
+
+## set the length of vectors
+length(x) <- 10
+length(x) 
+
+## creates a matrix from the given set of values
+my_matrix <- matrix(c(1,2,3, 4,5,6, 7,8,9), nrow = 3, ncol = 3, byrow = TRUE,
+               dimnames = list(c("row1", "row2", "row3"),
+                               c("col1", "col2", "col3")))
+print(my_matrix)
+
+## create a data frame
+my_df <- data.frame (
+  geom = c("barrier", "fluvial"),
+  LOI = c(0.6, 0.4),
+  BD = c(0.3, 0.5)
+)
+my_df
+
+## summarize the data
+summary(my_df)
+## use  [ ],  [[ ]] or $ to access columns from a data frame:
+my_df[1]
+my_df[["geom"]]
+my_df$geom
+
+## add a new row
+my_df = rbind(my_df, c("barrier", 0.5, 0.5))
+my_df
+
+## add a new columns
+my_df <- cbind(my_df, tidal_range = c(5, 4, 3))
+my_df
+
+
+## number of row of the ginkgo data
+nrow(ginkgo)
+## number of column of the ginkgo data
+ncol(ginkgo)
+## dimention of the ginkgo data
+dim(ginkgo)
+
+```
+
+## Subsetting
+
+```{r}
+
+## Subset a data frame by name: select one of the columns in the ginkgo data
+subset_ginkgo =  subset(ginkgo, select = c("site_id"))
+head(subset_ginkgo)
+
+## select first row of the ginkgo data
+first_row = ginkgo[1, ]
+first_row
+
+## select the element in row 2, column 3
+elem = ginkgo[2,3]
+elem
+
+## select the 3rd column of the ginkgo data
+col = ginkgo[ ,3]
+head(col)
+
+## Use this function to retrieve all the data for Adelie penguins (in the species column) from the peuguins dataset.
+Adelie_dat = subset(penguins, species == "Adelie")
+Adelie_dat
+
+```
+
+## Numerical Data Exploration
+
+```{r}
+
+## summary ginkgo data
+summary(ginkgo)
+
+## mean of notch depth
+mean(ginkgo$notch_depth)
+
+## standard deviation of notch depth
+sd(ginkgo$notch_depth)
+
+```
+
+## Graphical Data Exploration
+
+```{r}
+
+##  Using the ginkgo data, create a scatterplot of max leaf depth (x) and max leaf width (y).
+
+require(here)
+ginkgo = read.csv(here("data", "ginkgo_data_2021.csv"))
+plot(max_width~max_depth, data =ginkgo, main="Scatterplot Example", col = "dark blue",cex = .5,
+   xlab="max leaf depth", ylab="max leaf width ", pch=19, xlim=c(10, 150), ylim=c(10, 130))
+
+   
+## Create a histogram of penguin flipper lengths. 
+
+require(palmerpenguins)
+
+hist(penguins$flipper_length_mm, breaks = 50)
+
+
+## boxplot of ginkgo petiole lengths
+
+boxplot(ginkgo$petiole_length)
+## conditional boxplot of max depth conditioned on the seeds_present column.
+boxplot(max_depth~seeds_present, data = ginkgo)
+
+
+## 4-panel figure of histograms
+
+par(mfrow = c(2, 2))
+hist(penguins$flipper_length_mm, breaks = 50)
+hist(penguins$bill_length_mm, breaks = 50)
+hist(penguins$bill_depth_mm, breaks = 50)
+hist(penguins$body_mass_g, breaks = 50)
+
+```
+
+## Distribution Functions
+x <- -10:10
+dnorm(x, mean = 1, sd = 8) 
+
+pnorm(0, mean = 0, sd = 1)
+
+qnorm(0.5, mean = 0, sd = 1) 
+
+dbinom(10:20, 20, 0.5)
+
+pbinom(2, size=5, prob=.5)
+
+qbinom(.10, size=10, prob=.4)
+
